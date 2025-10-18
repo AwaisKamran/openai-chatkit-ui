@@ -1,0 +1,71 @@
+# --- Python ---
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Installer logs
+pip-log.txt
+
+# --- Virtual Environment ---
+# Standard virtual environment directories
+.venv/
+venv/
+env/
+
+# --- Secrets & Environment Variables ---
+# Ignore environment files, but not the example template
+.env
+.env.*
+!.env.example
+
+# --- IDEs and Editors ---
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains (PyCharm, etc.)
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# --- Testing & Coverage ---
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# --- Linters & Formatters ---
+.mypy_cache/
+.ruff_cache/
+
+# --- OS-specific ---
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# --- Logs ---
+*.log
+
+# --- Other ---
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Celery
+celerybeat-schedule

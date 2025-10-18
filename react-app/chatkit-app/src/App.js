@@ -1,38 +1,9 @@
-import React, { useState, useEffect } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 
 const BACKEND_URL = "http://localhost:8000";
 
-function App() {
-  const [clientSecret, setClientSecret] = useState(null);
-
-  useEffect(() => {
-    async function fetchSession() {
-      const res = await fetch(`${BACKEND_URL}/api/chatkit/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ user_id: "user123" }),
-      });
-
-      if (!res.ok) {
-        console.error("Failed to get session", await res.text());
-        return;
-      }
-      const response = await res.json();
-      setClientSecret(response.client_secret);
-    }
-    fetchSession();
-  }, []);
-
- // Setup ChatKit
-  const { control } = useChatKit({
-    api: {
-      clientToken: clientSecret ?? "",
-      domainKey: "localhost"
-    },
-    theme: {
+const simpleTheme = {
+  theme: {
       colorScheme: "light",
     },
     startScreen: {
@@ -41,6 +12,71 @@ function App() {
         { label: "Help", prompt: "Help me", icon: "circle-question" },
       ],
     },
+}
+
+const darkTheme = {
+  theme: {
+    colorScheme: "dark",
+  },
+  startScreen: {
+    greeting: "Hi there 👋 How can I help?",
+    prompts: [
+      { label: "Get Started", prompt: "Help me get started" },
+      { label: "FAQs", prompt: "Show me FAQs" }
+    ],
+  }
+};
+
+const sunriseCoralTheme = {
+  theme: {
+    colorScheme: "light",
+    color: {
+      accent: {
+        primary: "#FF6B6B",
+        level: 2
+      }
+    },
+    radius: "round",
+    density: "normal",
+    typography: {
+      fontFamily: "'Inter', sans-serif"
+    }
+  },
+  composer: {
+    placeholder: 'Ask anything about your data…',
+  },
+  startScreen: {
+    greeting: "Good morning! Ready to chat?",
+    prompts: [
+      {
+        label: 'Check on the status of a ticket',
+        prompt: 'Can you help me check on the status of a ticket?',
+      }
+    ],
+  }
+};
+
+
+function App() {
+  const { control } = useChatKit({
+    api: {
+      async getClientSecret() {
+        const resp = await fetch(`${BACKEND_URL}/api/chatkit/session`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: "user123" })
+        });
+        
+        const json = await resp.json();
+        if (!json.client_secret) {
+          throw new Error('Missing client_secret in response');
+        }
+        return json.client_secret;
+      }
+    },
+    // ...simpleTheme
+    //...midnightBlueTheme
+    ...sunriseCoralTheme
   });
 
   return (
@@ -52,7 +88,7 @@ function App() {
         margin: "auto",
       }}
     >
-      {clientSecret && control ? (
+      {control ? (
         <ChatKit control={control} className="h-full w-full" />
       ) : (
         <div>Loading chat…</div>
